@@ -45,11 +45,19 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               height: 150,
+              width: 350,
               child: ImageWidget(
                 imageUrl: 'http://via.placeholder.com/350x150',
                 shape: BoxShape.rectangle,
                 fit: BoxFit.fill,
               ),
+            ),
+            Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
             ),
             /*Expanded(
               flex: 1,
