@@ -1,8 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -21,10 +20,6 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -97,13 +92,22 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            Container(
+              height: 150,
+              child: ImageWidget(
+                imageUrl: 'http://via.placeholder.com/350x150',
+                shape: BoxShape.rectangle,
+                fit: BoxFit.fill,
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            /*Expanded(
+              flex: 1,
+              child: ImageWidget(
+                imageUrl: 'http://via.placeholder.com/350x150',
+                shape: BoxShape.rectangle,
+                fit: BoxFit.fill,
+              ),
+            ),*/
           ],
         ),
       ),
@@ -113,5 +117,53 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class ImageWidget extends StatefulWidget {
+  final String imageUrl;
+  final BoxShape shape;
+  final BoxFit fit;
+
+  ImageWidget(
+      {this.imageUrl, this.shape: BoxShape.rectangle, this.fit: BoxFit.contain})
+      : assert(imageUrl != null),
+        assert(shape != null),
+        assert(fit != null);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ImageWidget();
+  }
+}
+
+class _ImageWidget extends State<ImageWidget> {
+  @override
+  Widget build(BuildContext context) {
+    print('image widget');
+    return GestureDetector(
+        onTap: () {
+          //MessageUtilities.showShortToast('tap');
+          print("tap");
+        },
+        child: Container(
+          child: CachedNetworkImage(
+            imageUrl: widget.imageUrl,
+            placeholder: (context, url) => Container(
+              height: 0,
+              width: 0,
+            ),
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                shape: widget.shape,
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: widget.fit,
+                ),
+              ),
+            ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
+        ));
   }
 }
